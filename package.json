@@ -1,0 +1,18 @@
+{
+  "name": "fingerprint-twitch-bot",
+  "version": "1.0.0",
+  "description": "Twitch Bot Developed by @ FingerprintZA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Milahn Martin",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^16.3.2",
+    "tmi.js": "^1.8.3"
+  },
+  "devDependencies": {
+    "@types/tmi.js": "^1.7.2"
+  }
+}
