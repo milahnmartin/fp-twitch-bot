@@ -78,7 +78,11 @@ client.on('message', (channel, userstate, message, self) => {
     return
   }
 
-  onMessageHandler(channel, userstate, message, self)
+  if(message.toLowerCase() === '!faceit'){
+    client.say(channel,"Its Working bitch");
+  }
+
+  // onMessageHandler(channel, userstate, message, self)
 })
 
 function onMessageHandler (channel:any, userstate:any, message:any, self:any) {

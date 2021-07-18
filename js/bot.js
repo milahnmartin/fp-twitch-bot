@@ -65,7 +65,10 @@ client.on('message', (channel, userstate, message, self) => {
         hello(channel, userstate);
         return;
     }
-    onMessageHandler(channel, userstate, message, self);
+    if (message.toLowerCase() === '!faceit') {
+        client.say(channel, "Its Working bitch");
+    }
+    // onMessageHandler(channel, userstate, message, self)
 });
 function onMessageHandler(channel, userstate, message, self) {
     checkTwitchChat(userstate, message, channel);
