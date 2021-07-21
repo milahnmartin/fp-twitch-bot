@@ -5,5 +5,5 @@ exports.CHANNEL_NAME = 'ultrafy';
 exports.OAUTH_TOKEN = 'pyfxuat0yqzixwe49t0m2q9coqwrlq';
 exports.BOT_USERNAME = 'fingerprintza';
 exports.BLOCKED_WORDS = [
-    '',
+    'test',
 ];
