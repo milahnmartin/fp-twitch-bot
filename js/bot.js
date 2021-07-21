@@ -28,7 +28,7 @@ const options = {
         username: constants_1.BOT_USERNAME,
         password: constants_1.OAUTH_TOKEN
     },
-    channels: ['ultrafy']
+    channels: constants_1.CHANNELS
 };
 const client = new tmi_js_1.default.Client(options);
 client.connect();
