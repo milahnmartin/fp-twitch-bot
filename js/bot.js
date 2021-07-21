@@ -77,12 +77,18 @@ client.on('message', (channel, userstate, message, self) => {
         return;
     }
     if (user_response[0].toLowerCase() === '!faceit') {
-        client.say(channel, '@' + userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
-        faceit(channel, userstate, user_response[1])
-            .then(data => {
-            client.say(channel, data);
-        });
-        return;
+        if (!user_response[1]) {
+            client.say(channel, '@' + userstate.username + " you forgot to add a name, example !faceit Fadey-");
+            return;
+        }
+        else {
+            client.say(channel, '@' + userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
+            faceit(channel, userstate, user_response[1])
+                .then(data => {
+                client.say(channel, data);
+            });
+            return;
+        }
     }
     // onMessageHandler(channel, userstate, message, self)
 });
@@ -136,7 +142,7 @@ function faceit(channel, userstate, pname) {
             const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit`);
             const data_response = yield data.json();
             let stats_obj = data_response.lifetime;
-            return `    Average Headshot % - ${stats_obj['Average Headshots %']}
+            return `Average Headshot % - ${stats_obj['Average Headshots %']}
                 Average K/D Ratio - ${stats_obj['Average K/D Ratio']}
                 Current Win Streak - ${stats_obj['Current Win Streak']}
                 K/D Ratio - ${stats_obj['K/D Ratio']}
@@ -144,9 +150,7 @@ function faceit(channel, userstate, pname) {
                 Total Matches - ${stats_obj.Matches}
                 Recent Results - ${stats_obj['Recent Results']}
                 Total Wins - ${stats_obj.Wins}
-                Win Rate - ${stats_obj['Win Rate %']}
-                
-            `;
+                Win Rate - ${stats_obj['Win Rate %']}`;
         }
         catch (e) {
             return 'Sorry, error occured, user ' + pname + " doesn't exist";
