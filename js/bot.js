@@ -1,10 +1,20 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const tmi_js_1 = __importDefault(require("tmi.js"));
 const constants_1 = require("./constants");
+const fetch = require('node-fetch');
 const options = {
     options: { debug: true },
     connection: {
@@ -58,15 +68,21 @@ client.on('subgift', (channel, username, streakMonths, recipient, methods, users
 });
 // event handlers
 client.on('message', (channel, userstate, message, self) => {
+    let user_response = message.split(" ");
     if (self) {
         return;
     }
-    if (message.toLowerCase() === '!hello') {
+    if (user_response[0].toLowerCase() === '!hello') {
         hello(channel, userstate);
         return;
     }
-    if (message.toLowerCase() === '!faceit') {
-        client.say(channel, "Its Working bitch");
+    if (user_response[0].toLowerCase() === '!faceit') {
+        client.say(channel, '@' + userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
+        faceit(channel, userstate, user_response[1])
+            .then(data => {
+            client.say(channel, data);
+        });
+        return;
     }
     // onMessageHandler(channel, userstate, message, self)
 });
@@ -114,6 +130,32 @@ function subGiftHandler(channel, username, streakMonths, recipient, methods, use
     // )
 }
 // commands
+function faceit(channel, userstate, pname) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit`);
+            const data_response = yield data.json();
+            let stats_obj = data_response.lifetime;
+            return `    Average Headshot % - ${stats_obj['Average Headshots %']}
+                Average K/D Ratio - ${stats_obj['Average K/D Ratio']}
+                Current Win Streak - ${stats_obj['Current Win Streak']}
+                K/D Ratio - ${stats_obj['K/D Ratio']}
+                Longest Win Streak -${stats_obj['Longest Win Streak']}
+                Total Matches - ${stats_obj.Matches}
+                Recent Results - ${stats_obj['Recent Results']}
+                Total Wins - ${stats_obj.Wins}
+                Win Rate - ${stats_obj['Win Rate %']}
+                
+            `;
+        }
+        catch (e) {
+            return 'Sorry, error occured, user ' + pname + " doesn't exist";
+        }
+        finally {
+            console.log('Try Statement Finished ..');
+        }
+    });
+}
 function hello(channel, userstate) {
     client.say(channel, `@${userstate.username}, heya!`);
 }

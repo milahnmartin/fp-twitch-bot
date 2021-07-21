@@ -1,5 +1,8 @@
 import tmi from 'tmi.js'
 import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS } from './constants'
+import {player_stats} from "./types";
+import {stat} from "fs";
+const fetch = require('node-fetch');
 
 const options = {
 	options: { debug: true },
@@ -66,21 +69,33 @@ client.on('subgift', (channel, username, streakMonths, recipient, methods, users
   subGiftHandler(channel, username, streakMonths, recipient, methods, userstate)
 })
 
+
+
 // event handlers
 
-client.on('message', (channel, userstate, message, self) => {
+client.on('message', (channel, userstate, message, self) =>  {
+  let user_response = message.split(" ");
+
+
   if(self) {
-    return
+    return;
   }
 
-	if(message.toLowerCase() === '!hello') {
-    hello(channel, userstate)
-    return
+	if(user_response[0].toLowerCase() === '!hello') {
+    hello(channel, userstate);
+    return;
   }
 
-  if(message.toLowerCase() === '!faceit'){
-    client.say(channel,"Its Working bitch");
-  }
+	if(user_response[0].toLowerCase() === '!faceit'){
+      client.say(channel,'@'+userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
+      faceit(channel,userstate,user_response[1])
+          .then(data=>{
+            client.say(channel, data);
+          })
+
+	  return;
+    }
+
 
   // onMessageHandler(channel, userstate, message, self)
 })
@@ -159,6 +174,35 @@ function subGiftHandler(channel:any, username:any, streakMonths:any, recipient:a
 }
 
 // commands
+
+async function faceit(channel:any,userstate:any,pname:string) :Promise<any>{
+  try {
+    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit`)
+    const data_response = await data.json();
+    let stats_obj:player_stats = data_response.lifetime;
+
+    return `    Average Headshot % - ${stats_obj['Average Headshots %']}
+                Average K/D Ratio - ${stats_obj['Average K/D Ratio']}
+                Current Win Streak - ${stats_obj['Current Win Streak']}
+                K/D Ratio - ${stats_obj['K/D Ratio']}
+                Longest Win Streak -${stats_obj['Longest Win Streak']}
+                Total Matches - ${stats_obj.Matches}
+                Recent Results - ${stats_obj['Recent Results']}
+                Total Wins - ${stats_obj.Wins}
+                Win Rate - ${stats_obj['Win Rate %']}
+                
+            `
+
+  }catch (e){
+    return 'Sorry, error occured, user ' + pname + " doesn't exist"
+
+  }finally {
+    console.log('Try Statement Finished ..')
+  }
+
+}
+
+
 
 function hello (channel:any, userstate:any) {
   client.say(channel, `@${userstate.username}, heya!`)
