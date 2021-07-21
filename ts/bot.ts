@@ -1,6 +1,7 @@
 import tmi from 'tmi.js'
-import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS } from './constants'
+import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS,CHANNELS } from './constants'
 import {player_stats,error_api,twitch} from "./types";
+import {channel} from "diagnostic_channel";
 const fetch = require('node-fetch');
 
 const options = {
@@ -16,7 +17,7 @@ const options = {
 		username: BOT_USERNAME,
 		password: OAUTH_TOKEN
 	},
-	channels: [ 'ultrafy' ]
+	channels: CHANNELS
 }
 
 const client = new tmi.Client(options)
@@ -30,6 +31,7 @@ client.on('disconnected', (reason) => {
 
 client.on('connected', (address, port) => {
   onConnectedHandler(address, port)
+
 })
 
 client.on('hosted', (channel, username, viewers, autohost) => {
