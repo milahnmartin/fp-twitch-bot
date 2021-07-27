@@ -91,13 +91,19 @@ client.on('message', (channel, userstate, message, self) =>  {
       if(!user_response [1]){
         client.say(channel,'@'+userstate.username + " you forgot to add a name, example !faceit Fadey-");
         return;
-      }else{
+      }else if (user_response[0] === '!faceit'  && user_response[1] && !user_response[2]){
         client.say(channel,'@'+userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
-        faceit(channel,userstate,user_response[1])
+        faceit_data(user_response[1])
             .then(data=>{
               client.say(channel, data);
             })
         return;
+      }else if(user_response[0] === '!faceit' && user_response[1] && user_response[2]){
+          client.say(channel,'We are mapping data...')
+          faceit_map(user_response[1],user_response[2].toLowerCase())
+              .then(data=>{
+                  client.say(channel,data);
+              })
       }
 
     }
@@ -181,9 +187,9 @@ function subGiftHandler(channel:any, username:any, streakMonths:any, recipient:a
 
 // commands
 
-async function faceit(channel:any,userstate:any,pname:string) :Promise<any>{
+async function faceit_data(pname:string) :Promise<any>{
   try {
-    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit`)
+    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit:none`)
     const data_response = await data.json();
     let stats_obj:player_stats = data_response.lifetime;
 
@@ -209,6 +215,40 @@ async function faceit(channel:any,userstate:any,pname:string) :Promise<any>{
 }
 
 
+async function faceit_map(puser:string,pmap:string):Promise<any>{
+
+try{
+    const response = await fetch(`http://127.0.0.1:5000/get/${puser}/faceit:${pmap}`);
+    const map_data = await response.json();
+    const maps_stats = map_data.stats;
+    return `Map: ${map_data['label']}
+            Average Assists: ${maps_stats['Average Assists']}
+            Average Deaths: ${maps_stats['Average Deaths']}
+            Average Headshots %: ${maps_stats['Average Headshots %']}
+            Average K/D Ratio: ${maps_stats['Average K/D Ratio']}
+            Average Kills: ${maps_stats['Average Kills']}
+            Average MVP's: ${maps_stats['Average MVPs']}
+            Average Penta Kills: ${maps_stats['Average Penta Kills']}
+            Average Quadro Kills: ${maps_stats['Average Quadro Kills']}
+            Average Triple Kills: ${maps_stats['Average Triple Kills']}
+            Deaths Total: ${maps_stats['Deaths']}
+            Headshots Total: ${maps_stats['Headshots']}
+            Kills Total: ${maps_stats['Kills']}
+            Total Matches: ${maps_stats['Matches']}
+            MVPs Total: ${maps_stats['MVPs']}
+            Rounds Total: ${maps_stats['Rounds']}
+            Wins Total: ${maps_stats['Wins']}
+              
+        `;
+
+}catch (e){
+        return `Error Occured map doesn't exist, or player doesnt exist`;
+}finally {
+    console.log('Map function called...');
+}
+
+
+}
 
 function hello (channel:any, userstate:any) {
   client.say(channel, `@${userstate.username}, heya!`)
