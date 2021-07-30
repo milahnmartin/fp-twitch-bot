@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const tmi_js_1 = __importDefault(require("tmi.js"));
 const constants_1 = require("./constants");
+const logs_1 = require("./logs");
 const fetch = require('node-fetch');
 const options = {
     options: { debug: true },
@@ -76,6 +77,12 @@ client.on('message', (channel, userstate, message, self) => {
         hello(channel, userstate);
         return;
     }
+    let command = user_response[0];
+    if (command[0] === '!') {
+        logs_1.create_twitch_log(userstate.username, user_response[0], user_response[1]);
+        logs_1.create_twitch_log_discord(userstate.username, user_response[0], user_response[1]);
+    }
+    ;
     if (user_response[0].toLowerCase() === '!faceit') {
         if (!user_response[1]) {
             client.say(channel, '@' + userstate.username + " you forgot to add a name, example !faceit Fadey-");
@@ -170,9 +177,11 @@ function faceit_data(pname) {
 function faceit_map(puser, pmap) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield fetch(`http://127.0.0.1:5000/get/${puser}/faceit:${pmap}`);
+            const response = yield fetch(`http://127.0.0.1:5000/get/${puser}/faceit/${pmap}`);
             const map_data = yield response.json();
+            console.log(map_data);
             const maps_stats = map_data.stats;
+            console.log(maps_stats);
             return `Map: ${map_data['label']}
             Average Assists: ${maps_stats['Average Assists']}
             Average Deaths: ${maps_stats['Average Deaths']}

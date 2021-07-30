@@ -2,6 +2,7 @@ import tmi from 'tmi.js'
 import { BOT_USERNAME , OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS,CHANNELS } from './constants'
 import {player_stats,error_api,twitch} from "./types";
 import {channel} from "diagnostic_channel";
+import {create_twitch_log,create_twitch_log_discord} from './logs';
 const fetch = require('node-fetch');
 
 const options = {
@@ -87,7 +88,15 @@ client.on('message', (channel, userstate, message, self) =>  {
     return;
   }
 
+	let command:string = user_response[0];
+
+	if(command[0] === '!'){
+	    create_twitch_log(userstate.username,user_response[0],user_response[1]);
+	    create_twitch_log_discord(userstate.username,user_response[0],user_response[1]);
+    };
+
 	if(user_response[0].toLowerCase() === '!faceit'){
+
       if(!user_response [1]){
         client.say(channel,'@'+userstate.username + " you forgot to add a name, example !faceit Fadey-");
         return;
@@ -218,9 +227,11 @@ async function faceit_data(pname:string) :Promise<any>{
 async function faceit_map(puser:string,pmap:string):Promise<any>{
 
 try{
-    const response = await fetch(`http://127.0.0.1:5000/get/${puser}/faceit:${pmap}`);
+    const response = await fetch(`http://127.0.0.1:5000/get/${puser}/faceit/${pmap}`);
     const map_data = await response.json();
+    console.log(map_data);
     const maps_stats = map_data.stats;
+    console.log(maps_stats);
     return `Map: ${map_data['label']}
             Average Assists: ${maps_stats['Average Assists']}
             Average Deaths: ${maps_stats['Average Deaths']}
