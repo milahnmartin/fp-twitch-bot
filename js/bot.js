@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const tmi_js_1 = __importDefault(require("tmi.js"));
 const constants_1 = require("./constants");
+const logs_1 = require("./logs");
 const fetch = require('node-fetch');
 const options = {
     options: { debug: true },
@@ -76,18 +77,31 @@ client.on('message', (channel, userstate, message, self) => {
         hello(channel, userstate);
         return;
     }
+    let command = user_response[0];
+    if (command[0] === '!') {
+        logs_1.create_twitch_log(userstate.username, user_response[0], user_response[1]);
+        logs_1.create_twitch_log_discord(userstate.username, user_response[0], user_response[1]);
+    }
+    ;
     if (user_response[0].toLowerCase() === '!faceit') {
         if (!user_response[1]) {
             client.say(channel, '@' + userstate.username + " you forgot to add a name, example !faceit Fadey-");
             return;
         }
-        else {
+        else if (user_response[0] === '!faceit' && user_response[1] && !user_response[2]) {
             client.say(channel, '@' + userstate.username + " Fetching faceit data for " + user_response[1] + " ->");
-            faceit(channel, userstate, user_response[1])
+            faceit_data(user_response[1])
                 .then(data => {
                 client.say(channel, data);
             });
             return;
+        }
+        else if (user_response[0] === '!faceit' && user_response[1] && user_response[2]) {
+            client.say(channel, 'We are mapping data...');
+            faceit_map(user_response[1], user_response[2].toLowerCase())
+                .then(data => {
+                client.say(channel, data);
+            });
         }
     }
     // onMessageHandler(channel, userstate, message, self)
@@ -136,10 +150,10 @@ function subGiftHandler(channel, username, streakMonths, recipient, methods, use
     // )
 }
 // commands
-function faceit(channel, userstate, pname) {
+function faceit_data(pname) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit`);
+            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit:none`);
             const data_response = yield data.json();
             let stats_obj = data_response.lifetime;
             return `Average Headshot % - ${stats_obj['Average Headshots %']}
@@ -157,6 +171,42 @@ function faceit(channel, userstate, pname) {
         }
         finally {
             console.log('Try Statement Finished ..');
+        }
+    });
+}
+function faceit_map(puser, pmap) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(`http://127.0.0.1:5000/get/${puser}/faceit/${pmap}`);
+            const map_data = yield response.json();
+            console.log(map_data);
+            const maps_stats = map_data.stats;
+            console.log(maps_stats);
+            return `Map: ${map_data['label']}
+            Average Assists: ${maps_stats['Average Assists']}
+            Average Deaths: ${maps_stats['Average Deaths']}
+            Average Headshots %: ${maps_stats['Average Headshots %']}
+            Average K/D Ratio: ${maps_stats['Average K/D Ratio']}
+            Average Kills: ${maps_stats['Average Kills']}
+            Average MVP's: ${maps_stats['Average MVPs']}
+            Average Penta Kills: ${maps_stats['Average Penta Kills']}
+            Average Quadro Kills: ${maps_stats['Average Quadro Kills']}
+            Average Triple Kills: ${maps_stats['Average Triple Kills']}
+            Deaths Total: ${maps_stats['Deaths']}
+            Headshots Total: ${maps_stats['Headshots']}
+            Kills Total: ${maps_stats['Kills']}
+            Total Matches: ${maps_stats['Matches']}
+            MVPs Total: ${maps_stats['MVPs']}
+            Rounds Total: ${maps_stats['Rounds']}
+            Wins Total: ${maps_stats['Wins']}
+              
+        `;
+        }
+        catch (e) {
+            return `Error Occured map doesn't exist, or player doesnt exist`;
+        }
+        finally {
+            console.log('Map function called...');
         }
     });
 }
