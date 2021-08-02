@@ -39,8 +39,7 @@ export const create_twitch_log_discord = (dName:string | undefined,dCommand:stri
         .setTitle(`Twitch Username - ${dName} | Command Used - ${dCommand} | Target User - ${dTarget}`)
         .setColor('#0099ff')
 
-    webhookClient.send('fp-twitch-logs',{
-        username:'Fingerprint ZA -> Twitch Logs',
+    webhookClient.send('Fingerprint ZA -> Twitch Logs',{
         embeds:[embed]
     });
 }
