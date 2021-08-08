@@ -153,16 +153,26 @@ function subGiftHandler(channel, username, streakMonths, recipient, methods, use
 function faceit_data(pname) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit:none`);
+            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit/none`);
             const data_response = yield data.json();
             let stats_obj = data_response.lifetime;
+            let recent_result = stats_obj['Recent Results'];
+            let _recent_result = [];
+            for (let i of recent_result) {
+                if (i === '0') {
+                    _recent_result.push("W");
+                }
+                else {
+                    _recent_result.push("L");
+                }
+            }
             return `Average Headshot % - ${stats_obj['Average Headshots %']}
                 Average K/D Ratio - ${stats_obj['Average K/D Ratio']}
                 Current Win Streak - ${stats_obj['Current Win Streak']}
                 K/D Ratio - ${stats_obj['K/D Ratio']}
                 Longest Win Streak -${stats_obj['Longest Win Streak']}
                 Total Matches - ${stats_obj.Matches}
-                Recent Results - ${stats_obj['Recent Results']}
+                Recent Results - ${_recent_result}
                 Total Wins - ${stats_obj.Wins}
                 Win Rate - ${stats_obj['Win Rate %']}`;
         }

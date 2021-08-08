@@ -198,9 +198,26 @@ function subGiftHandler(channel:any, username:any, streakMonths:any, recipient:a
 
 async function faceit_data(pname:string) :Promise<any>{
   try {
-    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit:none`)
+    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit/none`)
     const data_response = await data.json();
     let stats_obj:player_stats = data_response.lifetime;
+
+    let recent_result:string[] = stats_obj['Recent Results'];
+    let _recent_result:string[] = [];
+
+
+    for (let i of recent_result){
+        if (i === '0'){
+            _recent_result.push("W");
+        }else{
+            _recent_result.push("L");
+        }
+    }
+
+
+
+
+
 
     return     `Average Headshot % - ${stats_obj['Average Headshots %']}
                 Average K/D Ratio - ${stats_obj['Average K/D Ratio']}
@@ -208,7 +225,7 @@ async function faceit_data(pname:string) :Promise<any>{
                 K/D Ratio - ${stats_obj['K/D Ratio']}
                 Longest Win Streak -${stats_obj['Longest Win Streak']}
                 Total Matches - ${stats_obj.Matches}
-                Recent Results - ${stats_obj['Recent Results']}
+                Recent Results - ${_recent_result}
                 Total Wins - ${stats_obj.Wins}
                 Win Rate - ${stats_obj['Win Rate %']}`
 
