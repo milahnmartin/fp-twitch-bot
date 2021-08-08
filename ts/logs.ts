@@ -39,7 +39,9 @@ export const create_twitch_log_discord = (dName:string | undefined,dCommand:stri
         .setTitle(`Twitch Username - ${dName} | Command Used - ${dCommand} | Target User - ${dTarget}`)
         .setColor('#0099ff')
 
-    webhookClient.send('Fingerprint ZA -> Twitch Logs',{
+    let current_time_date = new Date();
+
+    webhookClient.send(current_time_date,{
         embeds:[embed]
     });
 }
