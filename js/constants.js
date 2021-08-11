@@ -8,7 +8,7 @@ exports.BOT_USERNAME = 'fingerprintza';
 exports.BLOCKED_WORDS = [
     'test',
 ];
-exports.CHANNELS = ['ultrafy'];
+exports.CHANNELS = ['ultrafy','lxrd_merlin'];
 //MYSQL
 exports.MYSQL_HOST = "fp-logs-database.cqehbngnhfuo.eu-west-1.rds.amazonaws.com";
 exports.MYSQL_USER = "admin";
