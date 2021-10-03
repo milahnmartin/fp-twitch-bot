@@ -79,8 +79,8 @@ client.on('message', (channel, userstate, message, self) => {
     }
     let command = user_response[0];
     if (command[0] === '!') {
-        logs_1.create_twitch_log(userstate.username, user_response[0], user_response[1]);
-        logs_1.create_twitch_log_discord(userstate.username, user_response[0], user_response[1]);
+        (0, logs_1.create_twitch_log)(userstate.username, user_response[0], user_response[1]);
+        (0, logs_1.create_twitch_log_discord)(userstate.username, user_response[0], user_response[1]);
     }
     ;
     if (user_response[0].toLowerCase() === '!faceit') {
