@@ -75,3 +75,7 @@ typings/
 # FuseBox cache
 .fusebox/
 *.xml
+
+
+# constants file
+constants.ts
