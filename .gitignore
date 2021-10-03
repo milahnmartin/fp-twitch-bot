@@ -78,4 +78,5 @@ typings/
 
 
 # constants file
-**/constants
+constants.ts
+constants.js	
