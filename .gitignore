@@ -78,4 +78,4 @@ typings/
 
 
 # constants file
-constants.ts
+**/constants
