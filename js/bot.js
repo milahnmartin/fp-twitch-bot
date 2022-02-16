@@ -16,16 +16,85 @@ const tmi_js_1 = __importDefault(require("tmi.js"));
 const constants_1 = require("./constants");
 const fetch = require("node-fetch");
 const check_api_connection = () => {
-    fetch(`http://127.0.0.1:5069/get/Ultrafy/faceit/none`).then((resp) => {
-        if (resp.status != 200) {
-            console.error("[ERROR OCCURED WE DIDNT GET STATUS CODE 200 FROM THE API]");
-            throw Error;
-        }
-        else {
+    let status_code = 200;
+    try {
+        fetch(`http://127.0.0.1:5069/get/Ultrafy/faceit/none`).then((resp) => {
             console.log("[THE CHECK FOR API STATUS WAS SUCCESFULL AND CODE 200 WAS RETURNED]");
             console.log("-------------------------------------------------------------------");
-        }
-    });
+            status_code = 200;
+        });
+    }
+    catch (e) {
+        console.error("[ERROR OCCURED WE DIDNT GET STATUS CODE 200 FROM THE API]");
+        status_code = 404;
+        throw console.error("MASSIVE ERROR");
+    }
+    finally {
+        fetch("https://discordapp.com/api/webhooks/943650910096212008/Tw4CjJyI6dJI0-o8LoXaur6qU-417tmlFgsajXISBrXRzKn7dC6F6OI_soCBInbt5Wif", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                // the username to be displayed
+                username: "fingerprint-api-status",
+                // the avatar to be displayed
+                avatar_url: "https://cdn.discordapp.com/attachments/723568410079920261/943651506207477791/fp-logo.png",
+                // contents of the message to be sent
+                // content: "<@&865311245019906129> - API Status Check",
+                // enable mentioning of individual users or roles, but not @everyone/@here
+                allowed_mentions: {
+                    parse: ["users", "roles"],
+                },
+                // embeds to be sent
+                embeds: [
+                    {
+                        // decimal number colour of the side of the embed
+                        color: "0220255",
+                        // author
+                        // - icon next to text at top (text is a link)
+                        author: {
+                            name: "fingerprintza",
+                            url: "https://fingerprintza.com",
+                            icon_url: "https://cdn.discordapp.com/attachments/723568410079920261/943651506207477791/fp-logo.png",
+                        },
+                        // embed title
+                        // - link on 2nd row
+                        // thumbnail
+                        // - small image in top right corner.
+                        thumbnail: {
+                            url: "https://cdn.discordapp.com/attachments/723568410079920261/943651506207477791/fp-logo.png",
+                        },
+                        // embed description
+                        // - text on 3rd row
+                        description: "A fingerprint API-STATUS-CHECK was Triggered",
+                        // custom embed fields: bold title/name, normal content/value below title
+                        // - located below description, above image.
+                        fields: [
+                            {
+                                name: "API Status Code",
+                                value: status_code,
+                            },
+                            {
+                                name: "Check Passed",
+                                value: status_code == 200 ? "True" : "False",
+                            },
+                        ],
+                        // image
+                        // - picture below description(and fields)
+                        image: {
+                            url: "https://cdn.discordapp.com/attachments/723568410079920261/943651506207477791/fp-logo.png",
+                        },
+                        // footer
+                        // - icon next to text at bottom
+                        footer: {
+                            text: "fingerprintza.com",
+                        },
+                    },
+                ],
+            }),
+        });
+    }
 };
 check_api_connection();
 const options = {
