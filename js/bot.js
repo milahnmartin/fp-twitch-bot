@@ -15,6 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tmi_js_1 = __importDefault(require("tmi.js"));
 const constants_1 = require("./constants");
 const fetch = require("node-fetch");
+const check_api_connection = () => {
+    fetch(`http://127.0.0.1:5069/get/Ultrafy/faceit/none`).then((resp) => {
+        if (resp.status != 200) {
+            console.error("[ERROR OCCURED WE DIDNT GET STATUS CODE 200 FROM THE API]");
+            throw Error;
+        }
+        else {
+            console.log("[THE CHECK FOR API STATUS WAS SUCCESFULL AND CODE 200 WAS RETURNED]");
+            console.log("-------------------------------------------------------------------");
+        }
+    });
+};
+check_api_connection();
 const options = {
     options: { debug: true },
     connection: {
@@ -149,7 +162,7 @@ function subGiftHandler(channel, username, streakMonths, recipient, methods, use
 function faceit_data(pname) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const data = yield fetch(`http://127.0.0.1:5000/get/${pname}/faceit/none`);
+            const data = yield fetch(`http://127.0.0.1:5069/get/${pname}/faceit/none`);
             const data_response = yield data.json();
             let stats_obj = data_response.lifetime;
             let recent_result = stats_obj["Recent Results"];

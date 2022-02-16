@@ -1,9 +1,24 @@
 import tmi from "tmi.js";
 import { BOT_USERNAME, OAUTH_TOKEN, CHANNEL_NAME, BLOCKED_WORDS, CHANNELS } from "./constants";
-import { player_stats, error_api, twitch } from "./types";
+import { player_stats, error_api, twitch, api_status } from "./types";
 // import {channel} from "diagnostic_channel";
 import { create_twitch_log, create_twitch_log_discord } from "./logs";
+import { Console } from "console";
 const fetch = require("node-fetch");
+
+const check_api_connection = () => {
+  fetch(`http://127.0.0.1:5069/get/Ultrafy/faceit/none`).then((resp: api_status) => {
+    if (resp.status != 200) {
+      console.error("[ERROR OCCURED WE DIDNT GET STATUS CODE 200 FROM THE API]");
+      throw Error;
+    } else {
+      console.log("[THE CHECK FOR API STATUS WAS SUCCESFULL AND CODE 200 WAS RETURNED]");
+      console.log("-------------------------------------------------------------------");
+    }
+  });
+};
+
+check_api_connection();
 
 const options = {
   options: { debug: true },
@@ -198,7 +213,7 @@ function subGiftHandler(
 
 async function faceit_data(pname: string): Promise<any> {
   try {
-    const data = await fetch(`http://127.0.0.1:5000/get/${pname}/faceit/none`);
+    const data = await fetch(`http://127.0.0.1:5069/get/${pname}/faceit/none`);
     const data_response = await data.json();
     let stats_obj: player_stats = data_response.lifetime;
 

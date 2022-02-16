@@ -63,3 +63,7 @@ export interface maps_response {
   stats: maps_stats;
   type: string;
 }
+
+export interface api_status {
+  status: number;
+}

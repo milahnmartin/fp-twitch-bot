@@ -1,8 +1,8 @@
-export const CHANNEL_NAME: string = "";
-export const OAUTH_TOKEN: string = "";
+export const CHANNEL_NAME: string = "fingerprint";
+export const OAUTH_TOKEN: string = "oauth:66ppvm6oiu5j7e126o2ggaiioqxu20";
 //ultrafy 'pyfxuat0yqzixwe49t0m2q9coqwrlq'
 
-export const BOT_USERNAME: string = "";
+export const BOT_USERNAME: string = "fingerprint";
 export const BLOCKED_WORDS: string[] = ["test"];
 export const CHANNELS: string[] = ["ultrafy"];
 
