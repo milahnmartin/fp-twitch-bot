@@ -10,7 +10,7 @@ const fetch = require("node-fetch");
 const check_api_connection = () => {
   let status_code: number = 200;
   try {
-    fetch(`http://127.0.0.1:5069/get/Ultrafy/faceit/none`).then((resp: api_status) => {
+    fetch(`http://139.59.165.185:5069/get/Ultrafy/faceit/none`).then((resp: api_status) => {
       console.log("[THE CHECK FOR API STATUS WAS SUCCESFULL AND CODE 200 WAS RETURNED]");
       console.log("-------------------------------------------------------------------");
       status_code = 200;
