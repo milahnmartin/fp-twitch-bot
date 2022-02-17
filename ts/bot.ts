@@ -34,7 +34,8 @@ const check_api_connection = () => {
           avatar_url:
             "https://cdn.discordapp.com/attachments/723568410079920261/943651506207477791/fp-logo.png",
           // contents of the message to be sent
-          content: "<@&865311245019906129> - API Status Check Was Called",
+          content: "API Status Check Was Called",
+          // <@&865311245019906129> -
           // enable mentioning of individual users or roles, but not @everyone/@here
           allowed_mentions: {
             parse: ["users", "roles"],

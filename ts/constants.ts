@@ -1,10 +1,13 @@
-export const CHANNEL_NAME: string = "fingerprint";
-export const OAUTH_TOKEN: string = "oauth:66ppvm6oiu5j7e126o2ggaiioqxu20";
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
+export const CHANNEL_NAME: string | undefined = process.env.CHANNEL_NAME;
+export const OAUTH_TOKEN: string | undefined = process.env.OAUTH_TOKEN;
 //ultrafy 'pyfxuat0yqzixwe49t0m2q9coqwrlq'
 
-export const BOT_USERNAME: string = "fingerprint";
+export const BOT_USERNAME: string = "fingerprintza";
 export const BLOCKED_WORDS: string[] = ["test"];
-export const CHANNELS: string[] = ["ultrafy"];
+export const CHANNELS: string[] = ["Ultrafy"];
 
 //MYSQL
 
