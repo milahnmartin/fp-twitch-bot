@@ -287,7 +287,7 @@ function subGiftHandler(
 
 async function faceit_data(pname: string): Promise<any> {
   try {
-    const data = await fetch(`http://127.0.0.1:5069/get/${pname}/faceit/none`);
+    const data = await fetch(`http://139.59.165.185:5069/get/${pname}/faceit/none`);
     const data_response = await data.json();
     let stats_obj: player_stats = data_response.lifetime;
 
@@ -320,7 +320,7 @@ async function faceit_data(pname: string): Promise<any> {
 
 async function faceit_map(puser: string, pmap: string): Promise<any> {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/get/${puser}/faceit/${pmap}`);
+    const response = await fetch(`http://139.59.165.185:5069/get/${puser}/faceit/${pmap}`);
     const map_data = await response.json();
     console.log(map_data);
     const maps_stats = map_data.stats;
