@@ -80,3 +80,6 @@ typings/
 # constants file
 constants.ts
 constants.js	
+
+
+.idea
